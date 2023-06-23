@@ -6,13 +6,13 @@ from datetime import datetime
 from bson import ObjectId
 import os
 import jwt
-import locale
 from datetime import datetime, timedelta
 from reportlab.pdfgen import canvas
 from reportlab.lib.utils import ImageReader
 import io
 from os.path import join, dirname
 from dotenv import load_dotenv
+from babel.numbers import format_currency
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -29,7 +29,6 @@ app = Flask(__name__)
 SECRET_KEY = 'secret1141'
 TOKEN_KEY = 'mytoken'
 
-locale.setlocale(locale.LC_ALL, 'id_ID')
 
 @app.route('/', methods = ['GET'])
 def main():
@@ -121,7 +120,7 @@ def add_wisata():
     filename = f'static/images/wisata-{name}-{mytime}.{extension}'
     file.save(filename)
     price = float(request.form.get('price'))
-    formatted_price = locale.currency(price, grouping=True)
+    formatted_price = format_currency(price, 'IDR', locale='id_ID')
     db.wisata.insert_one({
         'name' : name,
         'description' : description,
@@ -178,7 +177,7 @@ def edit_wisata(id):
         filename = existing_wisata.get('image_wisata')
 
     price = float(request.form.get('price'))
-    formatted_price = locale.currency(price, grouping=True)
+    formatted_price = format_currency(price, 'IDR', locale='id_ID')
 
     # Update data database
     db.wisata.update_one(
@@ -262,7 +261,7 @@ def book_ticket():
 
     price = attraction.get('price', 0)
     total_price = price * num_tickets
-    formatted_price = locale.currency(total_price, grouping=True)
+    formatted_price = format_currency(total_price, 'IDR', locale='id_ID')
 
     # Record data booking tiket pengunjung
     db.bookings.insert_one({
