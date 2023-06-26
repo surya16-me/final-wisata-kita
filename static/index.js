@@ -113,7 +113,7 @@ function search(event) {
                 } else {
                     for (let i = 0; i < wisataList.length; i++) {
                         let attraction = wisataList[i];
-                        let html = '<div class="column is-3"><div class="card is-shady"><div class="card-image has-text-centered"><img src="/'+ attraction.image_wisata +'" alt="Image 3"></div><div class="card-content"><div class="content"><h4>' + attraction.name + '</h4><p>' + attraction.description + '</p><p><a href="/wisata/' + attraction.id + '">Cek Selengkapnya</a></p></div></div></div></div>';
+                        let html = '<div class="column is-3"><div class="card is-shady" style="height: 400px; border-radius: 20px;"><div class="card-image has-text-centered"><img src="/'+ attraction.image_wisata +'" alt="Image 3" class="is-3by2" style="width: 100%; height: 200px; object-fit: cover; border-radius: 20px 20px 0 0;"></div><div class="card-content"><div class="content"><h4>' + attraction.name + '</h4><p>' + attraction.description + '</p><p><a href="/wisata/' + attraction.id + '">Cek Selengkapnya</a></p></div></div></div></div>';
                         $('#wisata-list').append(html);
                     }
                 }
