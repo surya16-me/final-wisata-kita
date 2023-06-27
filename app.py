@@ -272,10 +272,39 @@ def book_ticket():
         'name': name,
         'email': email,
         'total_price' : formatted_price,
+        'proof': '',
         'status' : 'Pending'
     })
 
     return jsonify({'message': 'Ticket booked successfully'}), 200
+
+@app.route('/wisata/book/<booking_id>', methods=['POST'])
+def edit_proof(booking_id):
+    print("Edit Proof - Booking ID:", booking_id)
+    proof_file = request.files.get('proof')
+
+    existing_book = db.bookings.find_one({'_id': ObjectId(booking_id)})
+    print("Existing Book:", existing_book)
+    nama = existing_book['name']
+    wisata = existing_book['wisata']
+
+    if existing_book is None:
+        return jsonify({'error': 'Booking tidak ada'}), 404
+    
+    if proof_file:
+        if 'proof' in existing_book:
+            existing_file_path = existing_book['proof']
+            if existing_file_path and os.path.exists(existing_file_path):
+                os.remove(existing_file_path)
+        
+        extension = proof_file.filename.split('.')[-1]
+        filename = f'static/payment/bukti_bayar-{nama}-{wisata}.{extension}'
+        proof_file.save(filename)
+    else:
+        filename = existing_book.get('proof')
+    print("Updated Proof File:", filename)
+    db.bookings.update_one({'_id': ObjectId(booking_id)}, {'$set': {'proof': filename}})
+    return jsonify({'message': 'Proof updated successfully'}), 200
 
 @app.route('/wisata/bookings', methods=['GET'])
 def get_bookings():
