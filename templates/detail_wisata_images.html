@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+    <div class="columns">
+        <div class="column is-2">
+          First column
+        </div>
+        <div class="column is-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <a style="margin-left: 87%;" class="button">Tambah</a>
+                    </tr>
+                  <tr>
+                    <th>No</th>
+                    <th>Image</th>
+                    <th>url</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for i in images %}
+                  <tr>
+                    <td>
+                        {{loop.index}}
+                    </td>
+                    <td>
+                        <img src="{{url_for('static', filename= i.url)}}" alt="" style="height: 100px;">
+                    </td>
+                    <td>
+                        {{i.url}}
+                    </td>
+                    <td>
+                        <a class="button">Anchor</a>
+                        <button class="button">Button</button>
+                    </td>
+                  </tr>
+                  
+                  {% endfor %}
+                </tbody>
+              </table>
+        </div>
+        <div class="column is-2">
+          First column
+        </div>
+      </div>
+</body>
+</html>

@@ -231,7 +231,37 @@ def get_wisata_detail(wisata_id):
     except jwt.exceptions.DecodeError:
         msg = 'There was a problem logging you in'
     return render_template('detail wisata.html', attraction = attraction, msg=msg)
-    
+
+@app.route("/wisata/<wisata_id>/images")
+def get_wisata_detail_images(wisata_id):
+    attraction = db.wisata.find_one({'_id': ObjectId(wisata_id)})
+    token_receive = request.cookies.get(TOKEN_KEY)
+    logged_in = False
+    try:
+        payload =jwt.decode(
+            token_receive,
+            SECRET_KEY,
+            algorithms=['HS256']
+        )
+        user_info = db.users.find_one({"email": payload["id"]})
+        is_admin = user_info.get("category") == "admin"
+        images = db.wisata_images.find({"id_wisata":'648cff14e70c15aab831fb2f'})
+        logged_in = True
+        if attraction:
+            return render_template('detail_wisata_images.html', attraction = attraction, user_info=user_info, logged_in = logged_in, is_admin = is_admin, images=images)
+        else:
+            return render_template('detail_wisata_image.html', user_info=user_info, logged_in = logged_in)
+    except jwt.ExpiredSignatureError:
+        msg = 'Your token has expired'
+    except jwt.exceptions.DecodeError:
+        msg = 'There was a problem logging you in'
+    return render_template('detail_wisata_image.html', attraction = attraction, msg=msg)
+
+
+@app.route("/wisata/<wisata_id>/images/add", methods=['GET'])
+def add_wisata_detail_images(wisata_id):
+    return render_template('tambah_detail_image.html')
+
 
 @app.route('/wisata/book', methods=['POST'])
 def book_ticket():
@@ -482,7 +512,7 @@ def search():
         })
 
     return jsonify(wisata_list), 200
-    
+
 
 
 
